@@ -27,12 +27,11 @@ public class Activity
    @Column(nullable=false)
    private double duration;
 
-   // ✅ ADD THIS FIELD
+   
    @Column(length=200, nullable=false)
    private String venue;
   
 
-// ✅ ADD DATE FIELD
 @Column(nullable=false)
 private String date;
 

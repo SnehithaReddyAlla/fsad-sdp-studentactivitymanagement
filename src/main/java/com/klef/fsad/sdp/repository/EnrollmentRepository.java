@@ -23,7 +23,7 @@ public interface EnrollmentRepository
    @Query("SELECT e FROM Enrollment e WHERE e.participant.id = :pid")
    List<Enrollment> findByParticipantId(int pid);
 
-   /* ✅ ADD THIS */
+   
 
    @Modifying
    @Transactional

@@ -12,6 +12,6 @@ import com.klef.fsad.sdp.entity.Mentor;
 public interface ActivityRepository 
        extends JpaRepository<Activity,Integer> 
 {
-   // Get activities created by mentor
+   
    List<Activity> findByMentor(Mentor mentor);
 }
