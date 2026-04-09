@@ -2,6 +2,7 @@ package com.klef.fsad.sdp.service;
 
 import java.util.List;
 
+import com.klef.fsad.sdp.dto.ParticipantDTO;
 import com.klef.fsad.sdp.entity.Admin;
 import com.klef.fsad.sdp.entity.Participant;
 import com.klef.fsad.sdp.entity.Mentor;
@@ -16,5 +17,8 @@ public interface AdminService
   
   public List<Participant> viewAllParticipants();
   public String deleteParticipant(int id);
+
+  public ParticipantDTO ParticipantToParticipantDTO(Participant p);
+  public List<ParticipantDTO> displayallparticipantsDTO();
   
 }

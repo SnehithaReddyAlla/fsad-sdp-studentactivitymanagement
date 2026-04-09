@@ -45,7 +45,7 @@ public class ParticipantController
        }
    }
    
-   @PostMapping("login")
+   /*@PostMapping("login")
    public ResponseEntity<?> verifyparticipantlogin(@RequestBody Participant participant)
    {
        try
@@ -65,7 +65,7 @@ public class ParticipantController
        {
            return ResponseEntity.status(500).body("Internal Server Error");
        }
-   }
+   }*/
    
    @PostMapping("/updateprofile")
    public ResponseEntity<String> participantupdateprofile(@RequestBody Participant p)

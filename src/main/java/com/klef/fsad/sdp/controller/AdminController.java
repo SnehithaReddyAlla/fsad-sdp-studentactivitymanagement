@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.klef.fsad.sdp.entity.Admin;
+import com.klef.fsad.sdp.dto.ParticipantDTO;
+//import com.klef.fsad.sdp.entity.Admin;
 import com.klef.fsad.sdp.entity.Participant;
 import com.klef.fsad.sdp.entity.Mentor;
 import com.klef.fsad.sdp.service.AdminService;
@@ -32,7 +33,7 @@ public class AdminController
 		return "Full Stack SDP Project";
 	}
 	
-	@PostMapping("/login")
+	/*@PostMapping("/login")
 	public ResponseEntity<?> checkadminlogin(@RequestBody Admin admin)
 	{
 		try
@@ -52,7 +53,7 @@ public class AdminController
 		{
 			return ResponseEntity.status(500).body("Internal Server Error");
 		}
-	}
+	}*/
 	
 	@PostMapping("/addmentor")
 	public ResponseEntity<String> addmentor(@RequestBody Mentor mentor)
@@ -128,4 +129,17 @@ public class AdminController
 	    return adminService.deleteParticipant(id);
 	}
 	
+	@GetMapping("/displayallparticipantsdto")
+	  public ResponseEntity<?> displayallparticipantsDTO()
+	  {
+	      try
+	      {
+	          List<ParticipantDTO> participants = adminService.displayallparticipantsDTO();
+	          return ResponseEntity.ok(participants);
+	      }
+	      catch(Exception e)
+	      {
+	          return ResponseEntity.status(500).body("Error Fetching Participants");
+	      }
+	  }
 }

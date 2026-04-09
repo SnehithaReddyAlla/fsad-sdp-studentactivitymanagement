@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.klef.fsad.sdp.dto.EnrollmentDTO;
 import com.klef.fsad.sdp.entity.Activity;
 import com.klef.fsad.sdp.entity.Mentor;
 import com.klef.fsad.sdp.service.MentorService;
@@ -31,7 +32,7 @@ public class MentorController
 	   return "Mentor Controller Demo";
   }
   
-  @PostMapping("login")
+  /*@PostMapping("login")
   public ResponseEntity<?> verifymentorlogin(@RequestBody Mentor mentor)
   {
 	   try
@@ -51,22 +52,22 @@ public class MentorController
 		{
 			return ResponseEntity.status(500).body("Internal Server Error");
 		}
+  }*/
+  
+  
+  @PostMapping("/addactivity")
+  public ResponseEntity<String> addActivity(@RequestBody Activity activity)
+  {
+     try
+     {
+         String output = mentorService.addActivity(activity);
+         return ResponseEntity.status(201).body(output);
+     }
+     catch(Exception e)
+     {
+         return ResponseEntity.status(500).body("Error Adding Activity");
+     }
   }
-  
-  
-@PostMapping("/addactivity")
-public ResponseEntity<String> addActivity(@RequestBody Activity activity)
-{
-   try
-   {
-       String output = mentorService.addActivity(activity);
-       return ResponseEntity.status(201).body(output);
-   }
-   catch(Exception e)
-   {
-       return ResponseEntity.status(500).body("Error Adding Activity");
-   }
-}
   
 @GetMapping("/viewmyactivities/{mentorid}")
 public ResponseEntity<?> viewMyActivities(@PathVariable int mentorid)
@@ -102,6 +103,7 @@ public ResponseEntity<String> deleteActivity(@PathVariable int id)
      return ResponseEntity.status(500).body("Error Deleting Activity");
  }
 }
+
 @GetMapping("/viewallactivities")
 public ResponseEntity<?> viewAllActivities()
 {
@@ -127,7 +129,7 @@ public ResponseEntity<?> viewEnrollmentsByMentor(@PathVariable int mentorid)
 {
     try
     {
-        List<?> enrollments = mentorService.viewEnrollmentsByMentor(mentorid);
+        List<EnrollmentDTO> enrollments = mentorService.viewEnrollmentsByMentor(mentorid);
 
         if(enrollments == null || enrollments.isEmpty())
         {
