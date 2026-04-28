@@ -1,10 +1,10 @@
 package com.klef.fsad.sdp.dto;
 
-public class AuthRequestDTO 
+public class ChangePasswordDTO 
 {
     private String login;
-    private String password;
     private String role;
+    private String newPassword;
 
     public String getLogin() {
         return login;
@@ -14,19 +14,19 @@ public class AuthRequestDTO
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

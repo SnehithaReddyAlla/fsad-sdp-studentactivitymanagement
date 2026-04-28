@@ -11,4 +11,5 @@ public interface MentorRepository extends JpaRepository<Mentor,Integer>
    Mentor findByEmailAndPassword(String email, String password);
 
    Mentor findByEmail(String email);
+   Mentor findByUsername(String username);
 }

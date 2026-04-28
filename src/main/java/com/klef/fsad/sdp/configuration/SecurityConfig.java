@@ -11,7 +11,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,6 +31,9 @@ public class SecurityConfig
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
     {
@@ -43,23 +45,25 @@ public class SecurityConfig
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers(
-            	        "/swagger-ui/**",
-            	        "/v3/api-docs/**",
-            	        "/swagger-ui.html",
-            	        "/auth/**",
-            	        "/participantapi/registration"
-            	    ).permitAll()
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/swagger-ui.html",
+                    "/auth/**",
+                    "/participantapi/registration"
+                ).permitAll()
 
-            	    .requestMatchers("/mentorapi/viewallactivities")
-            	        .hasAnyAuthority("MENTOR", "PARTICIPANT")
+                .requestMatchers("/mentorapi/viewallactivities")
+                    .hasAnyAuthority("MENTOR", "PARTICIPANT")
+                    .requestMatchers("/contact/send")
+                    .hasAnyAuthority("MENTOR", "PARTICIPANT")
 
-            	    .requestMatchers("/adminapi/**").hasAuthority("ADMIN")
-            	    .requestMatchers("/mentorapi/**").hasAuthority("MENTOR")
-            	    .requestMatchers("/participantapi/**").hasAuthority("PARTICIPANT")
+                .requestMatchers("/adminapi/**").hasAuthority("ADMIN")
+                .requestMatchers("/mentorapi/**").hasAuthority("MENTOR")
+                .requestMatchers("/participantapi/**").hasAuthority("PARTICIPANT")
 
-            	    .anyRequest().authenticated()
-            	)
+                .anyRequest().authenticated()
+            )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -68,15 +72,12 @@ public class SecurityConfig
     @Bean
     public AuthenticationProvider authenticationProvider()
     {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(userService);
 
-    @Bean
-    public PasswordEncoder passwordEncoder()
-    {
-        return new BCryptPasswordEncoder();
+        provider.setPasswordEncoder(passwordEncoder);
+
+        return provider;
     }
 
     @Bean
@@ -90,11 +91,19 @@ public class SecurityConfig
             "http://localhost:2021"
         ));
 
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedMethods(
+            List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        );
+
+        configuration.setAllowedHeaders(
+            List.of("Authorization", "Content-Type")
+        );
+
         configuration.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", configuration);
 
         return source;

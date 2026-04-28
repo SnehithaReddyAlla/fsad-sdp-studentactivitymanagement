@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.klef.fsad.sdp.dto.AuthRequestDTO;
 import com.klef.fsad.sdp.security.JwtUtil;
 import com.klef.fsad.sdp.service.UserService;
+import com.klef.fsad.sdp.dto.ChangePasswordDTO;
+import com.klef.fsad.sdp.dto.ForgotPasswordRequestDTO;
+import com.klef.fsad.sdp.dto.ResetPasswordDTO;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,12 +47,10 @@ public class AuthController
 
             boolean isValid = false;
 
-            // ADMIN (plain check)
             if (role.equalsIgnoreCase("ADMIN"))
             {
                 isValid = request.getPassword().equals(userDetails.getPassword());
             }
-            // MENTOR / PARTICIPANT (BCrypt)
             else if (role.equalsIgnoreCase("MENTOR") || role.equalsIgnoreCase("PARTICIPANT"))
             {
                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -65,13 +66,10 @@ public class AuthController
                 return ResponseEntity.status(401).body("Login Invalid");
             }
 
-            // Generate JWT
             String token = jwtUtil.generateToken(userDetails);
 
-            // Fetch full user object
             Object userObj = service.getUserByLogin(request.getLogin());
 
-            // RETURN user also
             return ResponseEntity.ok(
                 Map.of(
                     "token", token,
@@ -84,6 +82,108 @@ public class AuthController
         {
             e.printStackTrace();
             return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+    
+    @PostMapping("/changepassword")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO dto)
+    {
+        try
+        {
+            String output = service.changePassword(
+                dto.getLogin(),
+                dto.getRole(),
+                dto.getNewPassword()
+            );
+
+            if (output.equals("USER_NOT_FOUND"))
+            {
+                return ResponseEntity.status(404).body("User Not Found");
+            }
+
+            if (output.equals("INVALID_ROLE"))
+            {
+                return ResponseEntity.status(400).body("Invalid Role");
+            }
+
+            return ResponseEntity.ok(output);
+        }
+        catch(Exception e)
+        {
+            return ResponseEntity.status(500).body("Password Change Failed");
+        }
+    }
+    
+    @PostMapping("/forgotpassword/sendotp")
+    public ResponseEntity<String> sendOtp(@RequestBody ForgotPasswordRequestDTO dto)
+    {
+        try
+        {
+            String output = service.sendForgotPasswordOtp(
+                dto.getEmail(),
+                dto.getRole()
+            );
+
+            if (output.equals("USER_NOT_FOUND"))
+            {
+                return ResponseEntity.status(404).body("User Not Found");
+            }
+
+            if (output.equals("INVALID_ROLE"))
+            {
+                return ResponseEntity.status(400).body("Invalid Role");
+            }
+
+            return ResponseEntity.ok(output);
+        }
+        catch(Exception e)
+        {
+            return ResponseEntity.status(500).body("Failed to Send OTP");
+        }
+    }
+
+    @PostMapping("/forgotpassword/reset")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO dto)
+    {
+        try
+        {
+            String output = service.resetPasswordWithOtp(
+                dto.getEmail(),
+                dto.getRole(),
+                dto.getOtp(),
+                dto.getNewPassword()
+            );
+
+            if (output.equals("OTP_NOT_FOUND"))
+            {
+                return ResponseEntity.status(400).body("Please generate OTP first");
+            }
+
+            if (output.equals("OTP_EXPIRED"))
+            {
+                return ResponseEntity.status(400).body("OTP Expired");
+            }
+
+            if (output.equals("INVALID_OTP"))
+            {
+                return ResponseEntity.status(400).body("Invalid OTP");
+            }
+
+            if (output.equals("USER_NOT_FOUND"))
+            {
+                return ResponseEntity.status(404).body("User Not Found");
+            }
+
+            if (output.equals("INVALID_ROLE"))
+            {
+                return ResponseEntity.status(400).body("Invalid Role");
+            }
+
+            return ResponseEntity.ok(output);
+        }
+        catch(Exception e)
+        {
+            return ResponseEntity.status(500).body("Password Reset Failed");
         }
     }
 }

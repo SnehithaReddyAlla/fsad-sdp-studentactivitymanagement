@@ -4,12 +4,10 @@ public class EnrollmentDTO
 {
     private int id;
 
-    // Participant details
     private String participantName;
     private String participantEmail;
     private String participantContact;
 
-    // Activity details
     private int activityId;
     private String activityName;
     private String activityCategory;
@@ -18,7 +16,6 @@ public class EnrollmentDTO
     private double activityDuration;
     private String mentorName;
 
-    // Enrollment details
     private String enrollmentDate;
     private String status;
 

@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 public class Enrollment 
 {
    @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)   // ✅ AUTO ID
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
    @ManyToOne

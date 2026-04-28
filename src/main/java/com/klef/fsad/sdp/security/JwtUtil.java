@@ -15,7 +15,6 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil
 {
-    // Hardcoded secret key for JWT
     private static final String SECRET = "MySuperStrongSecretKeyForJWT2026StudentActivitiesManagementProjectSecret123456";
 
     public String generateToken(UserDetails userDetails)
