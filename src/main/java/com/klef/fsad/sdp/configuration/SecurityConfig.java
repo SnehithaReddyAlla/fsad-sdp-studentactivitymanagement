@@ -89,7 +89,7 @@ public class SecurityConfig
             "http://localhost:5173",
             "http://localhost:5174",
             "http://localhost:2021",
-            "https://stately-sunshine-662e64.netlify.app/"
+            "https://studentactivitymanagement.netlify.app/"
         ));
 
         configuration.setAllowedMethods(
