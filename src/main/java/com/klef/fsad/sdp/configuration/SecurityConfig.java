@@ -88,7 +88,8 @@ public class SecurityConfig
         configuration.setAllowedOrigins(List.of(
             "http://localhost:5173",
             "http://localhost:5174",
-            "http://localhost:2021"
+            "http://localhost:2021",
+            "https://stately-sunshine-662e64.netlify.app/"
         ));
 
         configuration.setAllowedMethods(
